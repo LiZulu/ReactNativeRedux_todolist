@@ -7,7 +7,9 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "android-start": "react-native start & react-native run-android",
+    "ios-start": "react-native start & react-native run-ios"
   },
   "dependencies": {
     "react": "18.3.1",
