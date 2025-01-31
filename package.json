@@ -9,15 +9,23 @@
     "start": "react-native start",
     "test": "jest",
     "android-start": "react-native start & react-native run-android",
-    "ios-start": "react-native start & react-native run-ios"
+    "ios-start": "react-native start & react-native run-ios",
+    "web": "react-native-web"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^2.1.0",
+    "babel-plugin-module-resolver": "^5.0.2",
     "react": "18.3.1",
-    "react-native": "0.77.0"
+    "react-dom": "^19.0.0",
+    "react-native": "0.77.0",
+    "react-native-web": "^0.19.13",
+    "react-redux": "^9.2.0",
+    "redux": "^5.0.1",
+    "redux-logger": "^3.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.3",        
+    "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
     "@react-native-community/cli": "15.0.1",
     "@react-native-community/cli-platform-android": "15.0.1",

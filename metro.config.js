@@ -8,4 +8,13 @@ const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
  */
 const config = {};
 
+const defaultConfig = getDefaultConfig(__dirname);
+
+// Add "web" as a platform
+defaultConfig.resolver.resolverMainFields = [
+  "browser",
+  "module",
+  "main"
+];
+
 module.exports = mergeConfig(getDefaultConfig(__dirname), config);
