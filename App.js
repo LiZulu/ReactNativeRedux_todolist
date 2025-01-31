@@ -2,8 +2,8 @@ import React from 'react';
 import {Provider} from 'react-redux';
 import logger from 'redux-logger';
 import {createStore, applyMiddleware} from 'redux';
-import Todo from './component/Todo';
-import rootReducer from './reducers/rootReducer';
+import Todo from './src/styles/Todo';
+import rootReducer from './src/reducer/rootReducer';
 
 const store = createStore(rootReducer, applyMiddleware(logger));
 const App = () => (

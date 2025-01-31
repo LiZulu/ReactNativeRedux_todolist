@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector} from 'react-redux';
-import { AddTodo, RemoveTodo} from '../actions/todoAction/todoActions';
+import { AddTodo, RemoveTodo} from '../action/todoActions';
 import { styles} from './TodoStyles';
 import { Text, View, TextInput, Button, FlatList, TouchableOpacity } from 'react-native';
 
