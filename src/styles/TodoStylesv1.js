@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+/* import { StyleSheet } from "react-native";
 
 const toDoStyles = StyleSheet.create({
     body: {
@@ -52,8 +52,8 @@ const toDoStyles = StyleSheet.create({
 
     todoInputItem input:focus:
     {
-        outline: none;
+        outline: 2px solid rgbaColor(0, 230, 122);
     },
 });
 
-export default toDoStyles
+export default toDoStyles */

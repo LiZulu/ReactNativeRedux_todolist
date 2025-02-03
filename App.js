@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Provider } from 'react-redux';
 import logger from 'redux-logger';
 import {createStore, applyMiddleware} from 'redux';
 import { View, Text, StyleSheet, TextInput, Button }  from 'react-native';
 import todo from './src/styles/Todo'
 import rootReducer from './src/reducer/rootReducer';
-import toDoStyles from './src/styles/TodoStylesv1'; // Import the styles
+import toDoStyles from './src/styles/TodoStyles'; // Import the styles
+import { TouchableOpacity } from 'react-native';
 
 const store = createStore(rootReducer, applyMiddleware(logger));
 
@@ -16,6 +17,9 @@ const store = createStore(rootReducer, applyMiddleware(logger));
 ); */
 
 function App() {
+
+  const [isCompleteScreen, setIsCompleteScreen] = useState(false);
+
   return (
     <Provider store={store}>
       <View style={toDoStyles.container}> 
@@ -34,13 +38,28 @@ function App() {
             </View>
 
             <View style={toDoStyles.todoInputItem}>
-              <Button title="Add Task" onPress={() => {}} />
+              <TouchableOpacity 
+                style={toDoStyles.primaryBtn} 
+                onPress={() => {}}>
+                <Text 
+                style={{ 
+                  color: "#FFF", 
+                  textAlign: "center" 
+                }}> Add Task</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
           <View style={toDoStyles.btnArea}> 
             <Button title="To Do"> Todo </Button>
+            <TouchableOpacity style={toDoStyles.secondaryBtn} onPress={() => {}}>
+              <Text style={{ color: "#FFF", textAlign: "center" }}> Todo </Text>
+            </TouchableOpacity>
+
             <Button title="Completed"> Completed </Button>
+            <TouchableOpacity style={toDoStyles.secondaryBtn} onPress={() => {}}>
+              <Text style={{ color: "#FFF", textAlign: "center" }}> Completed </Text>
+            </TouchableOpacity>
           </View>
 
           <View style={toDoStyles.todoList}> 
