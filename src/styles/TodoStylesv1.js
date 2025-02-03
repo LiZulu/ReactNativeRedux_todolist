@@ -32,14 +32,14 @@ const toDoStyles = StyleSheet.create({
         marginRight: 25,
     },
     
-    label: 
+    todoInputItem.label: 
     {
         fontSize: 17,
         fontWeight: 'bold',
         paddingBottom: 7,
     },
     
-    input: 
+    todoInputItem input: 
     {
         width: 250,
         paddingBottom: 7,
@@ -50,6 +50,10 @@ const toDoStyles = StyleSheet.create({
         backgroundColor: '#FFF',
     },
 
+    todoInputItem input:focus:
+    {
+        outline: none;
+    },
 });
 
 export default toDoStyles
