@@ -1,95 +1,120 @@
 import { StyleSheet } from "react-native";
 
 const toDoStyles = StyleSheet.create({
-    body: {
-        color: "#FFFFFF",
-        overflow: 'hidden',
+    container: {
+        flex: 1,
+        backgroundColor: "#1e1e1e", // Dark theme background
+        padding: 20,
+        justifyContent: "center",
+    },
+
+    title: {
+        fontSize: 28,
+        fontWeight: "bold",
+        color: "#FFF",
+        textAlign: "center",
+        marginBottom: 20,
     },
 
     todoWrapper: {
-        backgroundColor: '#353434',
-        padding: '35%',
-        alignSelf: 'auto',
-        marginTop: '3%',
-        overflow: 'scroll',
-        boxShadow: '0px 5px 7px rgb(27, 27, 27)'
+        backgroundColor: "#2a2a2a",
+        borderRadius: 15,
+        padding: 20,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
     },
-    
+
     todoInput: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: 'rgb(78, 78, 78)',
-        paddingBottom: 25,
-        marginBottom: 25,
+        marginBottom: 20,
+        padding: 15,
+        borderRadius: 10,
+        backgroundColor: "#383838",
     },
-    
-    todoInputItem: 
-    {
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        marginRight: 25,
+
+    todoInputItem: {
+        marginBottom: 15,
     },
-    
-    label: 
-    {
-        fontSize: 17,
-        fontWeight: 'bold',
-        color: '#FFF',
-        paddingBottom: 7,
-        marginTop: 10,
+
+    label: {
+        fontSize: 16,
+        fontWeight: "600",
+        color: "#FFF",
+        marginBottom: 5,
     },
-    
-    input: 
-    {
-        width: 250,
-        borderWidth: 1,
-        borderRadius: 2,
-        paddingHorizontal: 10,
-        marginTop: 5,
-        backgroundColor: '#FFF',
+
+    input: {
+        backgroundColor: "#FFF",
+        padding: 12,
+        borderRadius: 10,
+        fontSize: 16,
     },
 
     btnArea: {
         flexDirection: "row",
-        justifyContent: "space-around",
-        marginVertical: 15,
-    },
-
-    todoList: {
-        marginTop: 20,
-    },
-
-    toDoListItem: {
-        backgroundColor: "#FFF",
-        padding: 15,
-        borderRadius: 5,
-        marginBottom: 10,
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: 15,
     },
 
     primaryBtn: {
-        backgroundColor: "rgb(0, 230, 122)",
-        color: '#FFF',
-        borderWidth: 0, // Replaced invalid `border: none`
-        borderRadius: 5,
-        width: 160,
+        backgroundColor: "#00E67A",
+        padding: 15,
+        borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
-        padding: 10,
-        margin: 20,
+        shadowColor: "#00E67A",
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.4,
+        elevation: 5,
     },
 
     secondaryBtn: {
-        backgroundColor: "rgb(71, 71, 71)",
-        color: '#FFF',
-        borderWidth: 0, // Replaced invalid `border: none`
-        borderRadius: 5,
-        width: 160,
+        backgroundColor: "#505050",
+        padding: 15,
+        borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
-        padding: 10,
-        margin: 20,
-    }
+        shadowColor: "#505050",
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.4,
+        elevation: 5,
+    },
+
+    toDoListItem: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        backgroundColor: "#383838",
+        padding: 15,
+        borderRadius: 10,
+        marginBottom: 10,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.3,
+        elevation: 4,
+    },
+
+    textContainer: {
+        flex: 1,
+    },
+
+    toDoListText: {
+        fontSize: 16,
+        color: "#FFF",
+    },
+
+    iconWrapper: {
+        flexDirection: "row",
+        gap: 15,
+    },
+
+    icon: {
+        fontSize: 24,
+        color: "#00E67A",
+    },
 });
 
-export default toDoStyles 
+export default toDoStyles;

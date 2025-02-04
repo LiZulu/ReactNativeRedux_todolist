@@ -8,6 +8,12 @@ import rootReducer from './src/reducer/rootReducer';
 import toDoStyles from './src/styles/TodoStyles'; // Import the styles
 import { TouchableOpacity } from 'react-native';
 
+// Import React Native-compatible icons
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import CheckIcon from 'react-native-vector-icons/FontAwesome';
+
 const store = createStore(rootReducer, applyMiddleware(logger));
 
 /* const App = () => (
@@ -17,63 +23,48 @@ const store = createStore(rootReducer, applyMiddleware(logger));
 ); */
 
 function App() {
-
   const [isCompleteScreen, setIsCompleteScreen] = useState(false);
+  const [isHovered, setIsHovered] = useState({ todo: false, completed: false });
 
   return (
     <Provider store={store}>
-      <View style={toDoStyles.container}> 
-        <Text style={toDoStyles.title}> My Todo </Text> 
-         
-        <View style={toDoStyles.todoWrapper}> 
-          <View style={toDoStyles.todoInput}>
+<View style={toDoStyles.container}>
+    <Text style={toDoStyles.title}> My Todo </Text>
+
+    <View style={toDoStyles.todoWrapper}>
+        {/* Task Input */}
+        <View style={toDoStyles.todoInput}>
             <View style={toDoStyles.todoInputItem}>
-              <Text style={toDoStyles.label}>Title</Text>
-              <TextInput style={toDoStyles.input} placeholder="What is the task title?" />
-            </View>
-            
-            <View style={toDoStyles.todoInputItem}>
-              <Text style={toDoStyles.label}>Description</Text>
-              <TextInput style={toDoStyles.input} placeholder="Describe the task..." />
+                <Text style={toDoStyles.label}>Title</Text>
+                <TextInput style={toDoStyles.input} placeholder="What is the task title?" placeholderTextColor="#999" />
             </View>
 
             <View style={toDoStyles.todoInputItem}>
-              <TouchableOpacity 
-                style={toDoStyles.primaryBtn} 
-                onPress={() => {}}>
-                <Text 
-                style={{ 
-                  color: "#FFF", 
-                  textAlign: "center" 
-                }}> Add Task</Text>
-              </TouchableOpacity>
+                <Text style={toDoStyles.label}>Description</Text>
+                <TextInput style={toDoStyles.input} placeholder="Describe the task..." placeholderTextColor="#999" />
             </View>
-          </View>
 
-          <View style={toDoStyles.btnArea}> 
-            <Button title="To Do"> Todo </Button>
-            <TouchableOpacity style={toDoStyles.secondaryBtn} onPress={() => {}}>
-              <Text style={{ color: "#FFF", textAlign: "center" }}> Todo </Text>
+            <TouchableOpacity style={toDoStyles.primaryBtn}>
+                <Text style={{ color: "#FFF", fontSize: 16, fontWeight: "600" }}> Add Task</Text>
             </TouchableOpacity>
+        </View>
 
-            <Button title="Completed"> Completed </Button>
-            <TouchableOpacity style={toDoStyles.secondaryBtn} onPress={() => {}}>
-              <Text style={{ color: "#FFF", textAlign: "center" }}> Completed </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={toDoStyles.todoList}> 
-
-            <View style={toDoStyles.toDoListItem}>
-              <Text> Task 1 </Text>
-              <Text> Description </Text>
+        {/* Task List */}
+        <View style={toDoStyles.toDoListItem}>
+            <View style={toDoStyles.textContainer}>
+                <Text style={toDoStyles.toDoListText}> Task 1 </Text>
+                <Text style={toDoStyles.toDoListText}> Description </Text>
             </View>
 
-          </View>
-        </View>  
-      </View>
+            <View style={toDoStyles.iconWrapper}>
+                <MaterialIcons name="delete" size={24} color="red" />
+                <FontAwesome name="check" size={24} color="green" />
+            </View>
+        </View>
+    </View>
+</View>
     </Provider>
-  )
+  );
 }
 
 export default App;
