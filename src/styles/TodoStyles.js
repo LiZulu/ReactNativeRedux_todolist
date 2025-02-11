@@ -119,6 +119,11 @@ const toDoStyles = StyleSheet.create({
         fontSize: 24,
         color: "#00E67A",
     },
+
+    titleLarge: {
+        fontSize: 24,
+        color: "green",
+    }
 });
 
 export default toDoStyles;

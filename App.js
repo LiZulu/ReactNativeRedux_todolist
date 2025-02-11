@@ -29,6 +29,7 @@ function App() {
   const [ isHovered, setIsHovered ] = useState({ delete: false, check: false });
   const [ titleFocused, setTitleFocused ] = useState(false);
   const [descriptionFocused, setDescriptionFocused] = useState(false);
+  const [clickedTitles, setClickedTitles] = useState({});
 
   const handleAddTask = () => {
     if (!newTitle || !newDescription) {
@@ -42,6 +43,14 @@ function App() {
     setNewDescription("");
   };
   
+
+  const handleTitleClick = (index) => {
+    setClickedTitles((prev) => ({
+        ...prev,
+        [index]: !prev[index], // Toggle title color for clicked index
+    }));
+};
+
   return (
     <Provider store={store}>
         <View style={toDoStyles.container}>
@@ -115,9 +124,37 @@ function App() {
                 <View>
                     {allTodos.map((item, index) => (
                     <View key={index} style={toDoStyles.toDoListItem}>
-                        <Text style={toDoStyles.toDoListText}>{item.title}</Text>
+                    {/* Left Side: Title & Description */}
+                    <View style={toDoStyles.textContainer}>
+                        <Text style={[toDoStyles.toDoListText, toDoStyles.titleLarge]}>{item.title}</Text>
                         <Text style={toDoStyles.toDoListText}>{item.description}</Text>
                     </View>
+                
+                    {/* Right Side: Icons */}
+                    <View style={toDoStyles.iconWrapper}>
+                        <TouchableOpacity
+                            onPressIn={() => setIsHovered({ ...isHovered, delete: true })}
+                            onPressOut={() => setIsHovered({ ...isHovered, delete: false })}
+                        >
+                            <MaterialIcons
+                                name="delete"
+                                size={24}
+                                color={isHovered.delete ? "red" : "white"}
+                            />
+                        </TouchableOpacity>
+                
+                        <TouchableOpacity
+                            onPressIn={() => setIsHovered({ ...isHovered, check: true })}
+                            onPressOut={() => setIsHovered({ ...isHovered, check: false })}
+                        >
+                            <FontAwesome
+                                name="check"
+                                size={24}
+                                color={isHovered.check ? "white" : "green"}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>
                 ))}
                 </View>
             </View>
