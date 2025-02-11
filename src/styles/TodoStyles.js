@@ -50,13 +50,17 @@ const toDoStyles = StyleSheet.create({
         padding: 12,
         borderRadius: 10,
         fontSize: 16,
+        borderWidth: 2, // Default border width
+        borderColor: "#383838", // Default border color (invisible)
     },
 
     btnArea: {
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "center",
         alignItems: "center",
+        gap: 10, // Adjust spacing between buttons (or use marginRight)
         marginTop: 15,
+        marginBottom: 20,
     },
 
     primaryBtn: {
