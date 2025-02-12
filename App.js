@@ -33,90 +33,86 @@ function App() {
   const [descriptionFocused, setDescriptionFocused] = useState(false);
   const [clickedTitles, setClickedTitles] = useState({});
 
-  const handleAddTodo = () => {
+  const handleAddTodo = async () => {
     if (!newTitle || !newDescription) {
-      alert("Please enter both title and description");
-      return;
+        alert("Please enter both title and description");
+        return;
     }
 
     let newTodoItem = {
         title: newTitle,
         description: newDescription,
-    }
+    };
 
     let updatedTodoArr = [...allTodos, newTodoItem];
     setTodos(updatedTodoArr);
 
+    // Re-fetch todos to ensure UI updates
+    const storedTodos = await AsyncStorage.getItem('todolist');
+    setTodos(JSON.parse(storedTodos) || []);
+        
+    console.log("Updated Todos (Before AsyncStorage):", updatedTodoArr); // Debugging Step
+    
     try {
-        AsyncStorage.setItem('todolist', JSON.stringify(updatedTodoArr));
-    } catch (error) 
-    {
+        await AsyncStorage.setItem('todolist', JSON.stringify(updatedTodoArr));
+    } catch (error) {
         console.log("Error saving to AsyncStorage", error);
     }
 
-    setNewTitle(""); // Clear input after adding task
+    setNewTitle("");
     setNewDescription("");
-  };
 
-  const handleDeleteTodo = (index) => {
+    // Use a short timeout to ensure state updates before logging
+    setTimeout(() => {
+        console.log("Updated Todos (After State Update):", allTodos);
+    }, 100);
+};
+
+  const handleDeleteTodo = async (index) => {
     let reducedTodo = [...allTodos];
     reducedTodo.splice(index, 1);
 
-    AsyncStorage.setItem ('todolist', JSON.stringify (reducedTodo));
+    await AsyncStorage.setItem ('todolist', JSON.stringify (reducedTodo));
     setTodos (reducedTodo);
   }
 
-  const handleComplete = (index) => {
+  const handleComplete = async (index) => {
     let now = new Date();
     let completedOn = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()} at ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
- 
-    let completedTask = {
+    let completedTask = { ...allTodos[index], completedOn };
+
+    let updatedTodos = allTodos.filter((_, i) => i !== index);
+    let updatedCompleted = [...completedTodos, completedTask];
+   
+    let filteredItem = {
         ...allTodos[index],
-        completedOn: completedOn,
-    };
- 
-    let updatedTodos = [...allTodos];
-    updatedTodos.splice(index, 1); // Remove from active tasks
- 
-    let updatedCompletedArr = [...completedTodos, completedTask];
- 
-    setTodos(updatedTodos);
-    setCompletedTodos(updatedCompletedArr);
- 
-    try {
-        AsyncStorage.setItem('todolist', JSON.stringify(updatedTodos));
-        AsyncStorage.setItem('completedTodos', JSON.stringify(updatedCompletedArr));
-    } catch (error) {
-        console.log("Error saving to AsyncStorage", error);
+        completedOn:completedOn
     }
- };
 
+    let updatedCompletedArr = [...completedTodos];
+    updatedCompletedArr.push(filteredItem);
+    setCompletedTodos(updatedCompletedArr);
 
- let updatedTodos = [...allTodos];
-    updatedTodos.splice(index, 1); // Remove from active tasks
+    setTodos(updatedTodos);
+    setCompletedTodos(updatedCompleted);
+
+    await AsyncStorage.setItem('todolist', JSON.stringify(updatedTodos));
+    await AsyncStorage.setItem('completedTodos', JSON.stringify(updatedCompleted));
   }
 
-  try {
-    AsyncStorage.setItem('todolist', JSON.stringify(updatedTodos));
-    AsyncStorage.setItem('completedTodos', JSON.stringify([...completedTodos, completedTask]));
-    } catch (error) {
-    console.log("Error saving to AsyncStorage", error);
-    }
-    
-    useEffect(() => {
-        AsyncStorage.getItem('todolist')
-        .then((savedTodo) => {
-            if (savedTodo) {
-                setTodos(JSON.parse(savedTodo));
-            }
-        })
-        .catch((error) => console.log("Error loading AsyncStorage", error));
-
-        AsyncStorage.getItem('completedTodos')
-        .then((savedCompleted) => {
-            if (savedCompleted)
-        })
-    }, []);
+  useEffect(() => {
+    const loadTodos = async () => {
+        try {
+            const savedTodos = await AsyncStorage.getItem("todolist");
+            const savedCompleted = await AsyncStorage.getItem("completedTodos");
+            if (savedTodos) setTodos(JSON.parse(savedTodos));
+            if (savedCompleted) setCompletedTodos(JSON.parse(savedCompleted));
+        } catch (error) {
+            console.log("Error loading AsyncStorage", error);
+        }
+    };
+    loadTodos();
+}, []);
 
   return (
     <Provider store={store}>
@@ -134,12 +130,15 @@ function App() {
                     <View style={toDoStyles.todoInputItem}>
                         <Text style={toDoStyles.label}>Description</Text>
                         <TextInput style={toDoStyles.input} value={newDescription} onChangeText={(text) => setNewDescription(text)} placeholder="Describe the task..." placeholderTextColor="#999" />
-                        <p><small> Completed ON: {item.completedOn}</small></p>
                     </View>
 
                     <View style={toDoStyles.todoInputItem}>
                         <Text style={toDoStyles.label}> Completed On: </Text>
-                        <TextInput style={toDoStyles.input} value={newDescription} onChangeText={(text) => setNewDescription(text)} placeholder="Describe the task..." placeholderTextColor="#999" />
+                        <Text style={toDoStyles.completedText}>
+                            {isCompleteScreen && completedTodos.length > 0
+                                ? `Last completed task: ${completedTodos[completedTodos.length - 1].completedOn}`
+                                : "No completed tasks"}
+                        </Text>
                     </View>
 
                     <TouchableOpacity style={toDoStyles.primaryBtn} onPress={handleAddTodo}>
@@ -197,32 +196,39 @@ function App() {
                 </View>
 
                 <View>
-                {allTodos.map((item, index) => (
-    <View key={index} style={toDoStyles.toDoListItem}>
-        <View style={toDoStyles.textContainer}>
-            <Text 
-                style={[
-                    toDoStyles.toDoListText, 
-                    toDoStyles.titleLarge, 
-                    { color: completedTodos.some(todo => todo.title === item.title) ? 'green' : 'white' } // Change color when completed
-                ]}
-            >
-                {item.title}
-            </Text>
+                {(isCompleteScreen ? completedTodos : allTodos).map((item, index) => (
+        <View key={index} style={toDoStyles.toDoListItem}>
+            <Text style={toDoStyles.toDoListText}>{item.title}</Text>
             <Text style={toDoStyles.toDoListText}>{item.description}</Text>
-        </View>
 
-        <View style={toDoStyles.iconWrapper}>
-            <TouchableOpacity onPress={() => handleDeleteTodo(index)}>
-                <MaterialIcons name="delete" size={24} color="rgb(255, 36, 0)" />
-            </TouchableOpacity>
+            {/* Right Side: Icons */}
+            <View style={toDoStyles.iconWrapper}>
+                <TouchableOpacity
+                    onPressIn={() => setIsHovered({ ...isHovered, delete: true })}
+                    onPressOut={() => setIsHovered({ ...isHovered, delete: false })}
+                >
+                    <MaterialIcons
+                        name="delete"
+                        size={24}
+                        color={isHovered.delete ? "rgb(255, 36, 0)" : "white"}
+                        onPress={() => handleDeleteTodo(index)}
+                    />
+                </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => handleComplete(index)}>
-                <FontAwesome name="check" size={24} color="rgb(144, 238, 144)" />
-            </TouchableOpacity>
+                <TouchableOpacity
+                    onPressIn={() => setIsHovered({ ...isHovered, check: true })}
+                    onPressOut={() => setIsHovered({ ...isHovered, check: false })}
+                >
+                    <FontAwesome
+                        name="check"
+                        size={24}
+                        color={isHovered.check ? "white" : "rgb(144, 238, 144)"}
+                        onPress={() => handleComplete(index)}
+                    />
+                </TouchableOpacity>
+            </View>
         </View>
-    </View>
-))}
+    ))}
                 </View>
             </View>
         </View>
