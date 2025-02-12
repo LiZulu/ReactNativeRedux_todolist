@@ -122,7 +122,7 @@ const toDoStyles = StyleSheet.create({
 
     titleLarge: {
         fontSize: 24,
-        color: "green",
+        color: "#00FF7F",
     }
 });
 

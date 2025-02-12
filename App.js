@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import logger from 'redux-logger';
 import {createStore, applyMiddleware} from 'redux';
@@ -12,6 +12,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import CheckIcon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const store = createStore(rootReducer, applyMiddleware(logger));
 
@@ -31,25 +32,34 @@ function App() {
   const [descriptionFocused, setDescriptionFocused] = useState(false);
   const [clickedTitles, setClickedTitles] = useState({});
 
-  const handleAddTask = () => {
+  const handleAddTodo = () => {
     if (!newTitle || !newDescription) {
       alert("Please enter both title and description");
       return;
     }
-  
-    setTodos([...allTodos, { title: newTitle, description: newDescription }]);
-  
+
+    let newTodoItem = {
+        title: newTitle,
+        description: newDescription,
+    }
+
+    let updatedTodoArr = [...allTodos, newTodoItem];
+    setTodos(updatedTodoArr);
+
+    try {
+        AsyncStorage.setItem('todolist', JSON.stringify(updatedTodoArr));
+    } catch (error) 
+    {
+        console.log("Error saving to AsyncStorage", error);
+    }
+
     setNewTitle(""); // Clear input after adding task
     setNewDescription("");
   };
-  
 
-  const handleTitleClick = (index) => {
-    setClickedTitles((prev) => ({
-        ...prev,
-        [index]: !prev[index], // Toggle title color for clicked index
-    }));
-};
+  useEffect(() => {
+    
+  })
 
   return (
     <Provider store={store}>
@@ -69,7 +79,7 @@ function App() {
                         <TextInput style={toDoStyles.input} value={newDescription} onChangeText={(text) => setNewDescription(text)} placeholder="Describe the task..." placeholderTextColor="#999" />
                     </View>
 
-                    <TouchableOpacity style={toDoStyles.primaryBtn} onPress={handleAddTask}>
+                    <TouchableOpacity style={toDoStyles.primaryBtn} onPress={handleAddTodo}>
                         <Text style={{ color: "#FFF", fontSize: 16, fontWeight: "600" }}> Add Task</Text>
                     </TouchableOpacity>
                 </View>
@@ -150,7 +160,7 @@ function App() {
                             <FontAwesome
                                 name="check"
                                 size={24}
-                                color={isHovered.check ? "white" : "green"}
+                                color={isHovered.check ? "white" : "rgb(144, 238, 144)"}
                             />
                         </TouchableOpacity>
                     </View>
