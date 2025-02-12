@@ -45,29 +45,26 @@ function App() {
     };
 
     let updatedTodoArr = [...allTodos, newTodoItem];
-    setTodos(updatedTodoArr);
 
-    // Re-fetch todos to ensure UI updates
-    const storedTodos = await AsyncStorage.getItem('todolist');
-    setTodos(JSON.parse(storedTodos) || []);
-        
-    console.log("Updated Todos (Before AsyncStorage):", updatedTodoArr); // Debugging Step
-    
+    // Save to AsyncStorage first
     try {
         await AsyncStorage.setItem('todolist', JSON.stringify(updatedTodoArr));
+        console.log("Updated Todos saved to AsyncStorage:", updatedTodoArr); // Debugging Step
     } catch (error) {
         console.log("Error saving to AsyncStorage", error);
     }
 
+    // Then update state
+    setTodos(updatedTodoArr);
+
+    // Clear inputs
     setNewTitle("");
     setNewDescription("");
-
-    // Use a short timeout to ensure state updates before logging
-    setTimeout(() => {
-        console.log("Updated Todos (After State Update):", allTodos);
-    }, 100);
 };
 
+useEffect(() => {
+    console.log("Updated Todos after state update:", allTodos);
+}, [allTodos]);  // Logs after state has been updated
   const handleDeleteTodo = async (index) => {
     let reducedTodo = [...allTodos];
     reducedTodo.splice(index, 1);
