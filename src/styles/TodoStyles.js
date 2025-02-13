@@ -16,6 +16,11 @@ const toDoStyles = StyleSheet.create({
         marginBottom: 20,
     },
 
+    titleStyle: {
+        fontWeight: 'bold',
+        color: '#90EE90',
+    },
+
     todoWrapper: {
         backgroundColor: "#2a2a2a",
         borderRadius: 15,
@@ -25,6 +30,13 @@ const toDoStyles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 5,
         elevation: 5,
+    },
+
+    completedText: {
+        color: "white", // Makes the text white
+        fontSize: 14,
+        flexWrap: 'wrap', // Allow wrapping of the text
+        width: '100%',    // Ensure it occupies the available space
     },
 
     todoInput: {
@@ -52,6 +64,10 @@ const toDoStyles = StyleSheet.create({
         fontSize: 16,
         borderWidth: 2, // Default border width
         borderColor: "#383838", // Default border color (invisible)
+        textAlignVertical: 'top',  // Aligns text to the top
+        minHeight: 60,  // Sets a minimum height
+        maxHeight: 200, // Prevents it from growing too large
+        overflow: 'hidden',
     },
 
     btnArea: {
@@ -108,6 +124,9 @@ const toDoStyles = StyleSheet.create({
     toDoListText: {
         fontSize: 16,
         color: "#FFF",
+        flexWrap: 'wrap', // Ensure text wraps properly
+        overflow: 'hidden', // Prevent text overflow
+        width: '100%', // Ensure it takes up the full width available
     },
 
     iconWrapper: {

@@ -32,6 +32,10 @@ function App() {
   const [ titleFocused, setTitleFocused ] = useState(false);
   const [descriptionFocused, setDescriptionFocused] = useState(false);
   const [clickedTitles, setClickedTitles] = useState({});
+  
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editDescription, setEditDescription] = useState('');
 
   const handleAddTodo = async () => {
     if (!newTitle || !newDescription) {
@@ -60,6 +64,27 @@ function App() {
     // Clear inputs
     setNewTitle("");
     setNewDescription("");
+};
+
+const handleEditTodo = (index) => {
+    setEditingIndex(index);
+    setEditTitle(allTodos[index].title);
+    setEditDescription(allTodos[index].description);
+};
+
+const handleUpdateTodo = async () => {
+    if (editingIndex === null) return;
+
+    let updatedTodos = [...allTodos];
+    updatedTodos[editingIndex] = { title: editTitle, description: editDescription };
+
+    // Save to AsyncStorage
+    await AsyncStorage.setItem('todolist', JSON.stringify(updatedTodos));
+
+    setTodos(updatedTodos);
+    setEditingIndex(null);
+    setEditTitle('');
+    setEditDescription('');
 };
 
 useEffect(() => {
@@ -101,9 +126,9 @@ useEffect(() => {
     const loadTodos = async () => {
         try {
             const savedTodos = await AsyncStorage.getItem("todolist");
-            const savedCompleted = await AsyncStorage.getItem("completedTodos");
+            const savedCompletedTodo = await AsyncStorage.getItem("completedTodos");
             if (savedTodos) setTodos(JSON.parse(savedTodos));
-            if (savedCompleted) setCompletedTodos(JSON.parse(savedCompleted));
+            if (savedCompletedTodo) setCompletedTodos(JSON.parse(savedCompletedTodo));
         } catch (error) {
             console.log("Error loading AsyncStorage", error);
         }
@@ -121,25 +146,30 @@ useEffect(() => {
                 <View style={toDoStyles.todoInput}>
                     <View style={toDoStyles.todoInputItem}>
                         <Text style={toDoStyles.label}>Title</Text>
-                        <TextInput style={toDoStyles.input} value={newTitle} onChangeText={(text) => setNewTitle(text)} placeholder="What is the task title?" placeholderTextColor="#999" />
+                        <TextInput 
+                            style = {toDoStyles.input} 
+                            value = {editingIndex !== null ? editTitle : newTitle}
+                            onChangeText = {(text) => editingIndex !== null ? setEditTitle(text) : setNewTitle(text)}
+                            placeholder = "What is the task title?" 
+                            placeholderTextColor = "#999" />
                     </View>
 
                     <View style={toDoStyles.todoInputItem}>
                         <Text style={toDoStyles.label}>Description</Text>
-                        <TextInput style={toDoStyles.input} value={newDescription} onChangeText={(text) => setNewDescription(text)} placeholder="Describe the task..." placeholderTextColor="#999" />
+                        <TextInput 
+                            style={toDoStyles.input} 
+                            value={editingIndex !== null ? editDescription : newDescription} 
+                            onChangeText={(text) => editingIndex !== null ? setEditDescription(text) : setNewDescription(text)}
+                            placeholder="Describe the task..." 
+                            placeholderTextColor="#999" 
+                            multiline = {true} 
+                            numberOfLines = {5} />
                     </View>
 
-                    <View style={toDoStyles.todoInputItem}>
-                        <Text style={toDoStyles.label}> Completed On: </Text>
-                        <Text style={toDoStyles.completedText}>
-                            {isCompleteScreen && completedTodos.length > 0
-                                ? `Last completed task: ${completedTodos[completedTodos.length - 1].completedOn}`
-                                : "No completed tasks"}
+                    <TouchableOpacity style={toDoStyles.primaryBtn} onPress={editingIndex !== null ? handleUpdateTodo : handleAddTodo}>
+                        <Text style={{ color: "#FFF", fontSize: 16, fontWeight: "600" }}>
+                            {editingIndex !== null ? "Update Task" : "Add Task"}
                         </Text>
-                    </View>
-
-                    <TouchableOpacity style={toDoStyles.primaryBtn} onPress={handleAddTodo}>
-                        <Text style={{ color: "#FFF", fontSize: 16, fontWeight: "600" }}> Add Task</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -194,38 +224,55 @@ useEffect(() => {
 
                 <View>
                 {(isCompleteScreen ? completedTodos : allTodos).map((item, index) => (
-        <View key={index} style={toDoStyles.toDoListItem}>
-            <Text style={toDoStyles.toDoListText}>{item.title}</Text>
-            <Text style={toDoStyles.toDoListText}>{item.description}</Text>
+                    <View key={index} style={toDoStyles.toDoListItem}>
+                        <Text style={[toDoStyles.toDoListText, toDoStyles.titleStyle, { flexWrap: 'wrap', width: '16%' }]}>{item.title}</Text>
+                        <View style={{ flexWrap: 'wrap', width: '53%' }}>
+                            <Text style={[toDoStyles.toDoListText, {flexWrap: 'wrap', overflow: 'hidden'}]}>{item.description}</Text>
+                            {isCompleteScreen && (
+                                <Text style={[toDoStyles.completedText, { marginTop: 5 }]}>Completed on: {item.completedOn}</Text>
+                            )}
+                        </View>
+                        
+                        {/* Right Side: Icons */}
+                        <View style={toDoStyles.iconWrapper}>
+                            <TouchableOpacity
+                                onPressIn={() => setIsHovered({ ...isHovered, delete: true })}
+                                onPressOut={() => setIsHovered({ ...isHovered, delete: false })} >
+                            
+                                <MaterialIcons
+                                    name="delete"
+                                    size={24}
+                                    color={isHovered.delete ? "rgb(255, 36, 0)" : "white"}
+                                    onPress={() => handleDeleteTodo(index)} />
+                            </TouchableOpacity>
 
-            {/* Right Side: Icons */}
-            <View style={toDoStyles.iconWrapper}>
-                <TouchableOpacity
-                    onPressIn={() => setIsHovered({ ...isHovered, delete: true })}
-                    onPressOut={() => setIsHovered({ ...isHovered, delete: false })}
-                >
-                    <MaterialIcons
-                        name="delete"
-                        size={24}
-                        color={isHovered.delete ? "rgb(255, 36, 0)" : "white"}
-                        onPress={() => handleDeleteTodo(index)}
-                    />
-                </TouchableOpacity>
+                            <TouchableOpacity>
+                            
+                            <MaterialIcons
+                                    name="edit"
+                                    size={24}
+                                    color="rgb(0, 150, 255)"
+                                    onPress={() => handleEditTodo(index)}
+                                />
+                            </TouchableOpacity>
 
-                <TouchableOpacity
-                    onPressIn={() => setIsHovered({ ...isHovered, check: true })}
-                    onPressOut={() => setIsHovered({ ...isHovered, check: false })}
-                >
-                    <FontAwesome
-                        name="check"
-                        size={24}
-                        color={isHovered.check ? "white" : "rgb(144, 238, 144)"}
-                        onPress={() => handleComplete(index)}
-                    />
-                </TouchableOpacity>
-            </View>
-        </View>
-    ))}
+
+                            <TouchableOpacity
+                                onPressIn={() => setIsHovered({ ...isHovered, check: true })}
+                                    onPressOut={() => setIsHovered({ ...isHovered, check: false })}
+                                >
+                                    {!isCompleteScreen && (
+                                        <FontAwesome
+                                            name="check"
+                                            size={24}
+                                            color={isHovered.check ? "white" : "rgb(144, 238, 144)"}
+                                            onPress={() => handleComplete(index)}
+                                        />
+                                    )}
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    ))}
                 </View>
             </View>
         </View>
