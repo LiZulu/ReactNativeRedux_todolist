@@ -142,6 +142,20 @@ const toDoStyles = StyleSheet.create({
     titleLarge: {
         fontSize: 24,
         color: "#00FF7F",
+    },
+
+    searchContainer: {
+        marginBottom: 10,
+        paddingHorizontal: 10,
+    },
+    searchInput: {
+        height: 40,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingHorizontal: 10,
+        backgroundColor: '#fff',
+        color: '#333',
     }
 });
 
