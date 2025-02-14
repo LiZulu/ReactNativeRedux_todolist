@@ -141,7 +141,7 @@ useEffect(() => {
     loadTodos();
 }, []);
 
-  return (
+return (
     <Provider store={store}>
         <View style={toDoStyles.container}>
             <Text style={toDoStyles.title}> My Todo </Text>
@@ -178,39 +178,6 @@ useEffect(() => {
                     </TouchableOpacity>
                 </View>
 
-                {/* Task List */}
-                {/* <View style={toDoStyles.toDoList}>
-                    <View style={toDoStyles.textContainer}>
-                        <Text style={toDoStyles.toDoListText}> Task 1 </Text>
-                        <Text style={toDoStyles.toDoListText}> Description </Text>
-                    </View>
-
-                    <View style={toDoStyles.iconWrapper}>
-                        <TouchableOpacity
-                            onPressIn={() => setIsHovered({ ...isHovered, delete: true })}
-                            onPressOut={() => setIsHovered({ ...isHovered, delete: false })}
-                        >
-                
-                            <MaterialIcons
-                                name="delete"
-                                size={24}
-                                color={isHovered.delete ? "red" : "white"}
-                            />
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            onPressIn={() => setIsHovered({ ...isHovered, check: true })}
-                            onPressOut={() => setIsHovered({ ...isHovered, check: false })}
-                        >
-                            <FontAwesome
-                            name="check"
-                            size={24}
-                            color={isHovered.check ? "white" : "green"}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                </View> */}
-
                 <View style={toDoStyles.btnArea}>
                     <TouchableOpacity
                         style={[toDoStyles.secondaryBtn, 
@@ -238,35 +205,35 @@ useEffect(() => {
                 </View>
 
                 <View>
-  {filteredTodos.map((item, index) => (
-    <View key={index} style={toDoStyles.toDoListItem}>
-      <Text style={[toDoStyles.toDoListText, toDoStyles.titleStyle, { flexWrap: 'wrap', width: '16%' }]}>{item.title}</Text>
-      <View style={{ flexWrap: 'wrap', width: '53%' }}>
-        <Text style={[toDoStyles.toDoListText, {flexWrap: 'wrap', overflow: 'hidden'}]}>{item.description}</Text>
-        {isCompleteScreen && (
-          <Text style={[toDoStyles.completedText, { marginTop: 5 }]}>Completed on: {item.completedOn}</Text>
-        )}
-      </View>
+                    {filteredTodos.map((item, index) => (
+                    <View key={index} style={toDoStyles.toDoListItem}>
+                        <Text style={[toDoStyles.toDoListText, toDoStyles.titleStyle, { flexWrap: 'wrap', width: '16%' }]}>{item.title}</Text>
+                        <View style={{ flexWrap: 'wrap', width: '53%' }}>
+                            <Text style={[toDoStyles.toDoListText, {flexWrap: 'wrap', overflow: 'hidden'}]}>{item.description}</Text>
+                            {isCompleteScreen && (
+                            <Text style={[toDoStyles.completedText, { marginTop: 5 }]}>Completed on: {item.completedOn}</Text>
+                            )}
+                        </View>
 
-      {/* Right Side: Icons */}
-      <View style={toDoStyles.iconWrapper}>
-        <TouchableOpacity onPress={() => handleDeleteTodo(index)}>
-          <MaterialIcons name="delete" size={24} color="rgb(255, 36, 0)" />
-        </TouchableOpacity>
+                        {/* Right Side: Icons */}
+                        <View style={toDoStyles.iconWrapper}>
+                            <TouchableOpacity onPress={() => handleDeleteTodo(index)}>
+                            <MaterialIcons name="delete" size={24} color="rgb(255, 36, 0)" />
+                            </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => handleEditTodo(index)}>
-          <MaterialIcons name="edit" size={24} color="rgb(0, 150, 255)" />
-        </TouchableOpacity>
+                            <TouchableOpacity onPress={() => handleEditTodo(index)}>
+                            <MaterialIcons name="edit" size={24} color="rgb(0, 150, 255)" />
+                            </TouchableOpacity>
 
-        {!isCompleteScreen && (
-          <TouchableOpacity onPress={() => handleComplete(index)}>
-            <FontAwesome name="check" size={24} color="rgb(144, 238, 144)" />
-          </TouchableOpacity>
-        )}
-      </View>
-    </View>
-  ))}
-</View>
+                            {!isCompleteScreen && (
+                            <TouchableOpacity onPress={() => handleComplete(index)}>
+                                <FontAwesome name="check" size={24} color="rgb(144, 238, 144)" />
+                            </TouchableOpacity>
+                            )}
+                        </View>
+                    </View>
+                    ))}
+                </View>
             </View>
         </View>
     </Provider>
