@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import logger from 'redux-logger';
 import {createStore, applyMiddleware} from 'redux';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity  }  from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView  }  from 'react-native';
 import todo from './src/styles/Todo'
 import rootReducer from './src/reducer/rootReducer';
 import toDoStyles from './src/styles/TodoStyles'; // Import the styles
@@ -144,6 +144,8 @@ useEffect(() => {
 return (
     <Provider store={store}>
         <View style={toDoStyles.container}>
+
+            <ScrollView>
             <Text style={toDoStyles.title}> My Todo </Text>
             
             <View style={toDoStyles.todoWrapper}>
@@ -235,6 +237,7 @@ return (
                     ))}
                 </View>
             </View>
+            </ScrollView>
         </View>
     </Provider>
   );
